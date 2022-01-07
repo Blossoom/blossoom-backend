@@ -33,9 +33,8 @@ class ProfileViewSet(ModelViewSet):
         """
         raise MethodNotAllowed(request.method)
 
-    @action(methods=['get'], detail=False,
-            url_path='(?P<pk>\w+)/followers')
-    def getUserFollowers(self, request, pk):
+    @action(methods=['get'], detail=True)
+    def followers(self, request, pk):
         """
         Returns object followers
         """
@@ -45,9 +44,8 @@ class ProfileViewSet(ModelViewSet):
             many=True, context={'request': request}).data
         return Response(data, status=status.HTTP_200_OK)
 
-    @action(methods=['get'], detail=False,
-            url_path='(?P<pk>\w+)/followings')
-    def getUserFollowings(self, request, pk):
+    @action(methods=['get'], detail=True)
+    def followings(self, request, pk):
         """
         Returns object followers
         """
