@@ -18,9 +18,11 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
 from profiles.urls import router as profile_router
+from notifications.urls import router as notification_router
 
 api_router = DefaultRouter()
 api_router.registry.extend(profile_router.registry)
+api_router.registry.extend(notification_router.registry)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
