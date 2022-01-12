@@ -3,6 +3,11 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 
+
+def upload_to(instance, filename):
+    return "profiles/{}".format(filename)
+
+
 class Profile(models.Model):
 
     # Link extending default user model
@@ -12,7 +17,7 @@ class Profile(models.Model):
     username = models.CharField(max_length=200, null=True)
     first_name = models.CharField(max_length=50, null=True)
     last_name = models.CharField(max_length=50, null=True)
-    profile_pic = models.ImageField(blank=True, null=True, default='default.png')
+    profile_pic = models.ImageField(blank=True, null=True, upload_to=upload_to, default='default.png')
     bio = models.TextField(default="No bio yet :)")
     birth_date = models.DateField(null=True, blank=True)
     location = models.CharField(max_length=100, blank=True, null=True)
