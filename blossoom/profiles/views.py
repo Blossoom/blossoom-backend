@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from .models import Profile
-from .serializers import ProfileSerializer, RelationViewSerializer
+from .serializers import ProfileSerializer, BasicUserDisplaySerializer
 
 
 # Create your views here.
@@ -27,12 +27,6 @@ class ProfileViewSet(ModelViewSet):
         Overwrite viewset method.
         """
         raise MethodNotAllowed(request.method)
-    
-    def list(self, request):
-        """
-        Overwrite viewset method.
-        """
-        raise MethodNotAllowed(request.method)
 
     @action(methods=['get'], detail=True)
     def followers(self, request, pk=None):
@@ -40,7 +34,7 @@ class ProfileViewSet(ModelViewSet):
         Returns object followers
         """
         profile = get_object_or_404(Profile, pk=pk)
-        data = RelationViewSerializer(
+        data = BasicUserDisplaySerializer(
             [relation.follow_from for relation in profile.followers.all()],
             many=True, context={'request': request}).data
         return Response(data, status=status.HTTP_200_OK)
@@ -51,7 +45,7 @@ class ProfileViewSet(ModelViewSet):
         Returns object followers
         """
         profile = get_object_or_404(Profile, pk=pk)
-        data = RelationViewSerializer(
+        data = BasicUserDisplaySerializer(
             [relation.follow_to for relation in profile.following.all()],
             many=True, context={'request': request}).data
         return Response(data, status=status.HTTP_200_OK)
