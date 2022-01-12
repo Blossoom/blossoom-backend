@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 from .models import Notification
-
+from profiles.serializers import BasicUserDisplaySerializer
 
 class NotificationSerializer(ModelSerializer):
 
@@ -19,11 +19,7 @@ class NotificationSerializer(ModelSerializer):
         Return basic information about the sender
         """
         sender = notification.sender
-        return {
-                'id': sender.id,
-                'username': sender.profile.username,
-                'profile_pic': str(sender.profile.profile_pic)
-        }
+        return BasicUserDisplaySerializer(sender.profile, context={'request': self.context.get('request')}).data
 
     def get_target(self, notification):
         """
