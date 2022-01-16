@@ -8,5 +8,9 @@ class Relationship(models.Model):
     follow_to = models.ForeignKey(Profile, related_name="followers", on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True, db_index=True)
 
+    class Meta:
+       unique_together = ("follow_from", "follow_to")
+
+
     def __str__(self) -> str:
         return f"Follow action TO {self.follow_to}"
