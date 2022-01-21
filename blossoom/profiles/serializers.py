@@ -23,7 +23,7 @@ class RelationStatusSerializer(serializers.ModelSerializer):
     
     def get_is_following(self, profile):
         current_user = self.context['request'].user
-        return None if current_user.profile == profile else current_user.profile.following.filter(follow_to=profile).exists()
+        return None if ( current_user.is_anonymous or current_user.profile == profile) else current_user.profile.following.filter(follow_to=profile).exists()
 
 
 class BasicUserDisplaySerializer(RelationStatusSerializer, serializers.ModelSerializer):

@@ -1,3 +1,4 @@
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ReadOnlyModelViewSet
 from .serializers import NotificationSerializer
@@ -9,6 +10,7 @@ class NotificationViewset(ReadOnlyModelViewSet):
 
     queryset = Notification.objects.filter(seen=False)
     serializer_class = NotificationSerializer
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         return super().get_queryset().filter(recipient=self.request.user).order_by('-timestamp')

@@ -17,17 +17,27 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings #add this
 from django.conf.urls.static import static #add this
-from rest_framework.routers import DefaultRouter
+from rest_framework_nested.routers import DefaultRouter
+
 
 # Endpoints
 from profiles.urls import router as profile_router
 from notifications.urls import router as notification_router
+from posts.urls import router as posts_router
+
 
 api_router = DefaultRouter()
 api_router.registry.extend(profile_router.registry)
 api_router.registry.extend(notification_router.registry)
+api_router.registry.extend(posts_router.registry)
+
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/', include(api_router.urls)),
+    path('api/v1/', include('authy.urls')),
+    # nested routers
+    path('', include('posts.urls')),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

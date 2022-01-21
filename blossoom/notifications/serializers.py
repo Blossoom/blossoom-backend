@@ -27,15 +27,16 @@ class NotificationSerializer(ModelSerializer):
         """
         return (
             notification.trigger.id
-            if notification.notification_type != 'fl'
+            if notification.notification_type != 'follow'
             else notification.trigger.follow_to.id
         )
 
     def get_message(self, notification):
         messages = {
-            "fl": "started following you",
-            "lk": "liked your post",
-            "cm": "commented on your post"
+            "follow": "started following you",
+            "upvote": "upvoted your post",
+            "downvote": "downvoted your post",            
+            "comment": "commented on your post"
         }
 
         return f"{notification.sender.username} {messages[notification.notification_type]}"

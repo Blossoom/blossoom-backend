@@ -1,4 +1,5 @@
 from inspect import currentframe
+from itertools import permutations
 from django.shortcuts import render
 from rest_framework.exceptions import MethodNotAllowed
 from rest_framework.viewsets import ModelViewSet
@@ -58,22 +59,27 @@ class ProfileViewSet(ModelViewSet):
 
         from relationships.models import Relationship
 
-        target_profile = get_object_or_404(Profile, pk=pk)
-        current_user_profile = request.user.profile
+        current_user_profile = request.user.profile if not request.user.is_anonymous else None
+        if not current_user_profile:
+            return Response({ "detail": "Authentication credentials were not provided."}, status=status.HTTP_401_UNAUTHORIZED)
 
-        if target_profile is current_user_profile:
-            return Response({"message": "User cant follow his profile"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+        target_profile = get_object_or_404(Profile, pk=pk)
+
+
+        if target_profile == current_user_profile:
+            return Response({"detail": "User cant follow his profile."}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
         relation = current_user_profile.following.filter(follow_to=target_profile)
         if relation.exists():
             relation.delete()
-            return Response({"message": "Unfollow success"}, status=status.HTTP_200_OK)
+            return Response({"detail": "Unfollow success."}, status=status.HTTP_200_OK)
         else:
             Relationship.objects.create(
                 follow_from = current_user_profile,
                 follow_to = target_profile
             )
-            return Response({"message": "Follow success"}, status=status.HTTP_200_OK)
+            return Response({"detail": "Follow success."}, status=status.HTTP_200_OK)
 
 
 
