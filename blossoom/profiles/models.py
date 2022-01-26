@@ -1,8 +1,9 @@
-from django.db import models
 from django.contrib.auth.models import User
+from django.db import models
 
-# Create your models here.
+# overwrite attributes.
 
+User._meta.get_field('email')._unique = True
 
 def upload_to(instance, filename):
     return "profiles/{}".format(filename)
@@ -32,6 +33,14 @@ class Profile(models.Model):
     # User profile status
     email_verified = models.BooleanField(default=False)
     collab_status = models.BooleanField(default=False)
+    is_new = models.BooleanField(default=True)
+
+    tags = models.ManyToManyField('tags.Tag', related_name='profile_tags', blank=True)
+
+
+    # Relational fields
+    # profile.followers
+    # profile.followings
 
     def __str__(self) -> str:
         return f"@{self.username}"

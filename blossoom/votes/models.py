@@ -1,7 +1,8 @@
-from django.db import models
-from django.contrib.contenttypes.fields import GenericForeignKey
-from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import User
+from django.contrib.contenttypes.fields import (GenericForeignKey,
+                                                GenericRelation)
+from django.contrib.contenttypes.models import ContentType
+from django.db import models
 
 
 # Create your models here.
@@ -19,8 +20,10 @@ class Vote(models.Model):
     object_id= models.PositiveIntegerField()
     post = GenericForeignKey('content_type', 'object_id')
 
-    timestamp = models.DateTimeField(auto_now_add=True)
+    created = models.DateTimeField(auto_now_add=True)
+    notifications = GenericRelation('notifications.Notification')
+
 
 
     def __str__(self):
-        return f"[{self.timestamp}] | {self.user} {self.value} {self.post}"
+        return f"[{self.created}] | {self.user} {self.value} {self.post}"

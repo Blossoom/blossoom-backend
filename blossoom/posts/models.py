@@ -1,8 +1,7 @@
-from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.fields import GenericRelation
-from votes.models import Vote
-
+from django.db import models
+from utils.models import BasicTimesince
 
 # Create your models here.
 
@@ -10,15 +9,16 @@ def upload_to(instance, filename):
     return "posts/{}".format(filename)
 
 
-class Base(models.Model):
+class Base(models.Model, BasicTimesince):
 
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=100, null=True, blank=True)
     content = models.TextField(max_length=1024, blank=True)
     mediafile = models.FileField(upload_to=upload_to,blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    votes = GenericRelation(Vote)
+    votes = GenericRelation('votes.Vote')
+    comments = GenericRelation('comments.Comment')
 
     class Meta:
         abstract = True

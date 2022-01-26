@@ -1,13 +1,13 @@
-from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
-
+from django.db import models
+from utils.models import BasicTimesince
 
 # Create your models here.
 
 
-class Notification(models.Model):
+class Notification(models.Model, BasicTimesince):
 
     class NotificationTypes(models.TextChoices):
         UPVOTE = ('upvote', 'like')
@@ -26,7 +26,7 @@ class Notification(models.Model):
 
     # user information
     seen = models.BooleanField(default=False)
-    timestamp = models.DateTimeField(auto_now_add=True)
+    created = models.DateTimeField(auto_now_add=True)
     notification_type = models.CharField(max_length=10, choices=NotificationTypes.choices)
 
 
