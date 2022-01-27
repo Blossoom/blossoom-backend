@@ -1,1 +1,1 @@
-web: gunicorn --pythonpath blossoom.wsgi
+web: gunicorn blossoom.wsgi
