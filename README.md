@@ -2,7 +2,7 @@
 
 
 
-<img src="/home/cyber/Pictures/Screenshot from 2022-01-27 21-45-00.png" style="zoom:90%;" />
+<img src="https://github.com/Blossoom/blossoom-backend/blob/testing/readme_image.png" style="zoom:90%;" />
 
 
 
