@@ -1,11 +1,5 @@
 # 									Blossoom back-end API 🌸
 
-
-
-<img src="https://github.com/Blossoom/blossoom-backend/blob/testing/readme_image.png" style="zoom:90%;" />
-
-
-
 Blossom is a constructive and inclusive social media network that links artists to each other. 
 
 <a href="https://blossoom-api.herokuapp.com//">![Blossoom](https://img.shields.io/badge/Blossoom-API-9cf?style=for-the-badge)</a>
