@@ -29,8 +29,7 @@ class ProfileViewSet(ModelViewSet):
     def get_queryset(self):
         query = self.request.query_params.get('user') or ''
         users = Profile.objects.filter(
-            Q(first_name__icontains=query) |
-            Q(last_name__icontains=query)  | 
+            Q(name__icontains=query)  | 
             Q(username__icontains=query)   |
             Q(bio__icontains=query) 
         ).order_by('-followers')
