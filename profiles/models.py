@@ -16,8 +16,7 @@ class Profile(models.Model):
     
     # Basic user information
     username = models.CharField(max_length=200, null=True)
-    first_name = models.CharField(max_length=50, null=True)
-    last_name = models.CharField(max_length=50, null=True)
+    name = models.CharField(max_length=100, null=True)
     profile_pic = models.ImageField(blank=True, null=True, upload_to=upload_to, default='default.png')
     bio = models.TextField(default="No bio yet :)")
     birth_date = models.DateField(null=True, blank=True)
