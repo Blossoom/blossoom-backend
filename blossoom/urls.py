@@ -20,11 +20,15 @@ from django.contrib import admin
 from django.urls import include, path
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
+
+# Endpoints
+
 from Events.urls import router as event_router
 from notifications.urls import router as notification_router
 from posts.urls import router as posts_router
-# Endpoints
 from profiles.urls import router as profile_router
+from tags.urls import router as tag_router
+
 # API docs
 from rest_framework import permissions
 from rest_framework_nested.routers import DefaultRouter
@@ -35,6 +39,7 @@ api_router.registry.extend(notification_router.registry)
 api_router.registry.extend(posts_router.registry)
 api_router.registry.extend(article_router.registry)
 api_router.registry.extend(event_router.registry)
+api_router.registry.extend(tag_router.registry)
 
 
 schema_view = get_schema_view(
