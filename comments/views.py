@@ -17,17 +17,19 @@ class CommentViewset(viewsets.ModelViewSet):
 
     def get_queryset(self):
         post = self.custom_get_object()
-        return post.comments.all().order_by('-created')
+        return post.comments.all().order_by('-created') if post else super().get_queryset()
 
     def custom_get_object(self):
         """ Dynamically get model based on the url lookup name 
         """
-        return get_object_or_404(self.get_correct_model(), pk=self.kwargs[next(iter(self.kwargs))])
+        model = self.get_correct_model()
+        model = model if model else None
+        return get_object_or_404(model, pk=self.kwargs[next(iter(self.kwargs))]) if model else None
 
     def get_correct_model(self):
         """ Dynamically get model from name.
         """
-        return get_model_from_any_app(list(self.kwargs.keys())[0].split('_')[0])
+        return get_model_from_any_app(list(self.kwargs.keys())[0].split('_')[0]) if self.kwargs.keys() else None
     
 
     def perform_create(self, serializer):
