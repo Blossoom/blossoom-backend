@@ -27,6 +27,7 @@ class Profile(models.Model):
 
 
     # Backend information
+    created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
     # User profile status
@@ -40,6 +41,10 @@ class Profile(models.Model):
     # Relational fields
     # profile.followers
     # profile.followings
+
+    def joined_at(self):
+        from django.contrib.humanize.templatetags import humanize
+        return humanize.naturalday(self.created_at)
 
     def __str__(self) -> str:
         return f"@{self.username}"

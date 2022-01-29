@@ -42,11 +42,13 @@ class ProfileSerializer(RelationStatusSerializer, serializers.ModelSerializer):
     
     followers_count = serializers.SerializerMethodField()
     followings_count = serializers.SerializerMethodField()
+    joined_us = serializers.ReadOnlyField(source='joined_at')
 
     class Meta:
         model = Profile
-        exclude = ('user',)
+        exclude = ('user','created_at', 'updated_at')
         extra_kwargs = {field: {'read_only':True} for field in RelationStatusSerializer.Meta.fields}
+        extra_kwargs['tags'] = {'read_only': True}
 
     def get_followers_count(self, profile):
         return profile.followers.all().count()

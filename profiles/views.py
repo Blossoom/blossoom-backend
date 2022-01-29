@@ -4,7 +4,8 @@ from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.exceptions import MethodNotAllowed
 from rest_framework.response import Response
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import GenericViewSet
+from rest_framework import mixins
 
 from .models import Profile
 from .serializers import BasicUserDisplaySerializer, ProfileSerializer
@@ -12,19 +13,14 @@ from .serializers import BasicUserDisplaySerializer, ProfileSerializer
 # Create your views here.
 
 
-class ProfileViewSet(ModelViewSet):
+class ProfileViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
+                    mixins.DestroyModelMixin, mixins.UpdateModelMixin, GenericViewSet):
     """
     A viewset for editing and viewing profiles
     """
 
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
-
-    def create(self, request, *args, **kwargs):
-        """
-        Overwrite viewset method.
-        """
-        raise MethodNotAllowed(request.method)
 
     def get_queryset(self):
         query = self.request.query_params.get('user') or ''
