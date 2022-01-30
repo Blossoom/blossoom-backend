@@ -13,7 +13,7 @@ class ArticleViewset(viewsets.ModelViewSet):
     serializer_class = ArticleSerializer
 
     def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
+        serializer.save(user=self.request.user)
 
     def get_queryset(self):
         query = self.request.query_params.get('q') or ''
