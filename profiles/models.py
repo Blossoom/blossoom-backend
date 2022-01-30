@@ -18,6 +18,7 @@ class Profile(models.Model):
     username = models.CharField(max_length=200, null=True)
     name = models.CharField(max_length=100, null=True)
     profile_pic = models.ImageField(blank=True, null=True, upload_to=upload_to, default='default.png')
+    background_pic = models.ImageField(blank=True, null=True, upload_to=upload_to, default='default.png')
     bio = models.TextField(default="No bio yet :)")
     birth_date = models.DateField(null=True, blank=True)
     location = models.CharField(max_length=100, blank=True, null=True)
