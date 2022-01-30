@@ -4,11 +4,11 @@ from comments.views import CommentViewset
 from rest_framework_nested import routers
 from votes.views import VoteViewset
 
-from .views import ArticleViewset
+from .views import ArticleViewset, EditorViewSet
 
 router = routers.DefaultRouter()
 router.register(r'articles', ArticleViewset)
-
+router.register(r'articles-upload', EditorViewSet, basename='image-upload')
 
 # Nested routers add votes && comments
 article_nested = routers.NestedDefaultRouter(router, r'articles', lookup='article')

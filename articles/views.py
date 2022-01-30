@@ -2,9 +2,12 @@ from django.db.models import Q
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework import mixins
 
-from .models import Article
-from .serializers import ArticleSerializer
+from .models import Article, EditorImage
+from .serializers import ArticleSerializer, EditorSerializer
+
+
 
 
 class ArticleViewset(viewsets.ModelViewSet):
@@ -46,3 +49,9 @@ class ArticleViewset(viewsets.ModelViewSet):
         myposts = self.get_queryset().filter(user_id=request.user.id)
         serializer = self.get_serializer(myposts, many=True, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+
+class EditorViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
+
+    serializer_class = EditorSerializer

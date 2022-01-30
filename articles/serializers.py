@@ -2,7 +2,7 @@ from profiles.serializers import BasicUserDisplaySerializer
 from rest_framework import serializers
 from votes.serializers import VoteSerializer
 
-from .models import Article
+from .models import Article, EditorImage
 
 
 class ArticleSerializer(serializers.ModelSerializer):
@@ -18,3 +18,10 @@ class ArticleSerializer(serializers.ModelSerializer):
     
     def get_votes(self, ins):
         return VoteSerializer(ins, context={'request': self.context.get('request')}).data
+
+
+class EditorSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = EditorImage
+        exclude = ('id',)

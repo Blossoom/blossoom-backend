@@ -9,6 +9,10 @@ def upload_to(instance, filename):
     return "articles/{}".format(filename)
 
 
+def editor_upload_to(instance, filename):
+    return "articles/editor-uploads/{}".format(filename)
+
+
 class Article(models.Model, BasicTimesince):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -30,3 +34,9 @@ class Article(models.Model, BasicTimesince):
 
     def __str__(self) -> str:
         return "{}: {}".format(self.title, self.preview_content)
+
+
+
+class EditorImage(models.Model):
+
+    image = models.ImageField(upload_to=editor_upload_to,blank=True, null=True)
