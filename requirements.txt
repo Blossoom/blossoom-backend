@@ -35,3 +35,5 @@ uritemplate==4.1.1
 urllib3==1.26.8
 whitenoise==5.3.0
 zipp==3.7.0
+cloudinary==1.28.1
+django-cloudinary-storage==0.3.0

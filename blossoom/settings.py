@@ -16,7 +16,6 @@ from pathlib import Path
 
 import dj_database_url
 import django_heroku
-from django.core.management.utils import get_random_secret_key
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -42,7 +41,9 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'cloudinary_storage',
     'django.contrib.staticfiles',
+    'cloudinary',
     'whitenoise.runserver_nostatic',
     'drf_yasg',
     'rest_framework',
@@ -219,6 +220,25 @@ SIMPLE_JWT = {
 }
 
 CORS_ORIGIN_ALLOW_ALL = True
+
+# Production image upload config
+# https://cloudinary.com/documentation
+
+CLOUD_NAME = os.environ.get('CLOUD_NAME')
+API_KEY =  os.environ.get('API_KEY')
+API_SECRET = os.environ.get('API_SECRET')
+
+
+if CLOUD_NAME and API_KEY and API_SECRET:
+
+    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+
+    CLOUDINARY_STORAGE = {
+        'CLOUD_NAME': CLOUD_NAME,
+        'API_KEY': API_KEY,
+        'API_SECRET': API_SECRET
+    }
 
 # Activate Django-Heroku.
 django_heroku.settings(locals())
