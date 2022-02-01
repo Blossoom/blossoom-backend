@@ -3,6 +3,7 @@ from django.db import models
 from django.forms import EmailField
 
 # overwrite attributes.
+User._meta.get_field('email')._unique = True
 
 def upload_to(instance, filename):
     return "profiles/{}".format(filename)
@@ -15,7 +16,6 @@ class Profile(models.Model):
     
     # Basic user information
     username = models.CharField(max_length=200, null=True)
-    email = models.EmailField('Email', blank=True)
     name = models.CharField(max_length=100, null=True)
     profile_pic = models.ImageField(blank=True, null=True, upload_to=upload_to, default='default.png')
     background_pic = models.ImageField(blank=True, null=True, upload_to=upload_to, default='default.png')
