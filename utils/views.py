@@ -34,13 +34,11 @@ class CustomPostModelViewset(viewsets.ModelViewSet):
 
         return posts
 
-    @action(methods=['get'], detail=False)
-    def me(self, request, pk=None):
+    @action(methods=['get'], detail=False, url_path='users/(?P<user_pk>[^/.]+)')
+    def users(self, request, user_pk=None):
         """ Get logged in user posts 
         """
-        if request.user.is_anonymous:
-            return Response({ "detail": "Authentication credentials were not provided."}, status=status.HTTP_401_UNAUTHORIZED)
-        myposts = self.get_queryset().filter(user_id=request.user.id)
+        myposts = self.get_queryset().filter(user_id=user_pk)
         serializer = self.get_serializer(myposts, many=True, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
