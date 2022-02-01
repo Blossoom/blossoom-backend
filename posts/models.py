@@ -29,7 +29,8 @@ class Base(models.Model, BasicTimesince):
 
 class Artwork(Base):
     tags = models.ManyToManyField('tags.Tag', related_name='artwork_tags', blank=True)
+    saves = models.ManyToManyField(User, blank=True, related_name='artwork_save')
 
 
 class Question(Base):
-    pass
+    saves = models.ManyToManyField(User, blank=True, related_name='question_save')

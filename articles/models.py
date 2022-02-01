@@ -30,6 +30,8 @@ class Article(models.Model, BasicTimesince):
     tags = models.ManyToManyField('tags.Tag', related_name='article_tags', blank=True)
 
     notifications = GenericRelation('notifications.Notification')
+    saves = models.ManyToManyField(User, blank=True, related_name='article_save')
+
 
 
     def __str__(self) -> str:
