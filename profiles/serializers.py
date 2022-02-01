@@ -43,10 +43,11 @@ class ProfileSerializer(RelationStatusSerializer, serializers.ModelSerializer):
     followers_count = serializers.SerializerMethodField()
     followings_count = serializers.SerializerMethodField()
     joined_us = serializers.ReadOnlyField(source='joined_at')
+    social_links = serializers.SerializerMethodField()
 
     class Meta:
         model = Profile
-        exclude = ('user','created_at', 'updated_at')
+        exclude = ('user','created_at', 'updated_at', 'website_url', 'behance_username', 'twitter_username', 'instagram_username')
         extra_kwargs = {field: {'read_only':True} for field in RelationStatusSerializer.Meta.fields}
         extra_kwargs['tags'] = {'read_only': True}
 
@@ -55,3 +56,11 @@ class ProfileSerializer(RelationStatusSerializer, serializers.ModelSerializer):
 
     def get_followings_count(self, profile):
         return profile.following.all().count()
+    
+    def get_social_links(self, ins):
+        return {
+            'website_url': ins.website_url, 
+            'behance_username': ins.behance_username, 
+            'twitter_username': ins.twitter_username, 
+            'instagram_username': ins.instagram_username
+        }

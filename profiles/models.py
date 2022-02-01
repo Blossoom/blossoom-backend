@@ -15,7 +15,7 @@ class Profile(models.Model):
     
     # Basic user information
     username = models.CharField(max_length=200, null=True)
-    name = models.CharField(max_length=100, null=True)
+    name = models.CharField(max_length=100, blank=True)
     profile_pic = models.ImageField(blank=True, null=True, upload_to=upload_to, default='default.png')
     background_pic = models.ImageField(blank=True, null=True, upload_to=upload_to, default='default.png')
     bio = models.TextField(default="No bio yet :)")
@@ -24,6 +24,12 @@ class Profile(models.Model):
     
     background = models.TextField(max_length=200, blank=True, null=True)
     working_on = models.TextField(max_length=200, blank=True, null=True)
+
+    # social links
+    website_url = models.URLField(max_length=100, blank=True)
+    behance_username = models.CharField(max_length=100, blank=True)
+    twitter_username = models.CharField(max_length=100, blank=True)
+    instagram_username = models.CharField(max_length=100, blank=True)
 
 
     # Backend information
