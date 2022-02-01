@@ -101,7 +101,7 @@ class ProfileViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
         from posts.serializers import GeneralPostSerializer
         from articles.serializers import ArticleSerializer
 
-        if request.user.is_anonymous or request.user.profile.pk != pk:
+        if request.user.is_anonymous or request.user.profile.pk != int(pk):
             return Response({ "detail": "Authentication credentials were not provided."}, status=status.HTTP_401_UNAUTHORIZED)
 
         artworkSerializer = GeneralPostSerializer
