@@ -11,6 +11,7 @@ class GeneralPostSerializer(serializers.ModelSerializer):
     user = BasicUserDisplaySerializer(source='user.profile', read_only=True)
     votes = serializers.SerializerMethodField()
     timesince = serializers.ReadOnlyField(source='FORMAT')
+    saves = serializers.SerializerMethodField()
 
     class Meta:
         model = None
@@ -21,3 +22,9 @@ class GeneralPostSerializer(serializers.ModelSerializer):
     
     def get_votes(self, ins):
         return VoteSerializer(ins, context={'request': self.context.get('request')}).data
+    
+    def get_saves(self, ins):
+        return {
+            'has_saved': True if self.context.get('request').user in ins.saves.all() else False,
+            'total_saves': ins.saves.all().count()
+        }
