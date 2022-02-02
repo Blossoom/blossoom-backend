@@ -27,7 +27,11 @@ class CustomPostModelViewset(viewsets.ModelViewSet):
             ).order_by('-created')
 
             if query == 'relevant':
-                posts = posts.filter(Q(user__profile__in=[relationship.follow_to.id for relationship in self.request.user.profile.following.all()])).order_by('-created')
+                posts = posts.filter(Q(
+                    user__profile__in=[
+                        relationship.follow_to.id for relationship
+                        in self.request.user.profile.following.all()
+                    ])).order_by('-created')
             
         if query == 'hot':
             posts = posts.order_by('-votes', '-created')
@@ -38,10 +42,7 @@ class CustomPostModelViewset(viewsets.ModelViewSet):
     def users(self, request, user_pk=None):
         """ Get logged in user posts 
         """
-        from profiles.models import Profile
-        profile = get_object_or_404(Profile, pk=user_pk)
-        myposts = self.queryset.filter(user_id=profile.user.id)
-        print(myposts)
+        myposts = self.queryset.filter(user__profile__id=user_pk)
         serializer = self.get_serializer(myposts, many=True, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
