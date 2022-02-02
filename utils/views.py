@@ -38,7 +38,7 @@ class CustomPostModelViewset(viewsets.ModelViewSet):
     def users(self, request, user_pk=None):
         """ Get logged in user posts 
         """
-        myposts = self.get_queryset().filter(user_id=user_pk)
+        myposts = self.queryset.filter(user_id=user_pk)
         serializer = self.get_serializer(myposts, many=True, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
