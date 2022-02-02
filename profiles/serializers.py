@@ -50,6 +50,10 @@ class ProfileSerializer(RelationStatusSerializer, serializers.ModelSerializer):
         exclude = ('user','created_at', 'updated_at', 'website_url', 'behance_username', 'twitter_username', 'instagram_username')
         extra_kwargs = {field: {'read_only':True} for field in RelationStatusSerializer.Meta.fields}
         extra_kwargs['tags'] = {'read_only': True}
+        extra_kwargs['website_url'] = {'write_only': True}
+        extra_kwargs['behance_username'] = {'write_only': True}
+        extra_kwargs['twitter_username'] = {'write_only': True}
+        extra_kwargs['instagram_username'] = {'write_only': True}
 
     def get_followers_count(self, profile):
         return profile.followers.all().count()
