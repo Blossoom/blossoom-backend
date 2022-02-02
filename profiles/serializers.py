@@ -47,7 +47,7 @@ class ProfileSerializer(RelationStatusSerializer, serializers.ModelSerializer):
 
     class Meta:
         model = Profile
-        exclude = ('user','created_at', 'updated_at', 'website_url', 'behance_username', 'twitter_username', 'instagram_username')
+        exclude = ('user','created_at', 'updated_at')
         extra_kwargs = {field: {'read_only':True} for field in RelationStatusSerializer.Meta.fields}
         extra_kwargs['tags'] = {'read_only': True}
         extra_kwargs['website_url'] = {'write_only': True}
