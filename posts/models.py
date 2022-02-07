@@ -14,7 +14,7 @@ class Base(models.Model, BasicTimesince):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=100, null=True, blank=True)
     content = models.TextField(max_length=1024, blank=True)
-    mediafile = models.FileField(upload_to=upload_to,blank=True, null=True)
+    mediafile = models.ImageField(upload_to=upload_to,blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     votes = GenericRelation('votes.Vote')
@@ -29,7 +29,8 @@ class Base(models.Model, BasicTimesince):
 
 class Artwork(Base):
     tags = models.ManyToManyField('tags.Tag', related_name='artwork_tags', blank=True)
+    saves = models.ManyToManyField(User, blank=True, related_name='artwork_save')
 
 
 class Question(Base):
-    pass
+    saves = models.ManyToManyField(User, blank=True, related_name='question_save')

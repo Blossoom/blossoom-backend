@@ -1,10 +1,14 @@
+from django import http
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
+from jinja2 import pass_context
 from rest_framework import status
 from rest_framework.decorators import action
-from rest_framework.exceptions import MethodNotAllowed
 from rest_framework.response import Response
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import GenericViewSet
+from rest_framework import mixins
+
+from posts.models import Artwork, Question
 
 from .models import Profile
 from .serializers import BasicUserDisplaySerializer, ProfileSerializer
@@ -12,7 +16,8 @@ from .serializers import BasicUserDisplaySerializer, ProfileSerializer
 # Create your views here.
 
 
-class ProfileViewSet(ModelViewSet):
+class ProfileViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
+                    mixins.DestroyModelMixin, mixins.UpdateModelMixin, GenericViewSet):
     """
     A viewset for editing and viewing profiles
     """
@@ -20,17 +25,10 @@ class ProfileViewSet(ModelViewSet):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
 
-    def create(self, request, *args, **kwargs):
-        """
-        Overwrite viewset method.
-        """
-        raise MethodNotAllowed(request.method)
-
     def get_queryset(self):
         query = self.request.query_params.get('user') or ''
         users = Profile.objects.filter(
-            Q(first_name__icontains=query) |
-            Q(last_name__icontains=query)  | 
+            Q(name__icontains=query)  | 
             Q(username__icontains=query)   |
             Q(bio__icontains=query) 
         ).order_by('-followers')
@@ -94,6 +92,34 @@ class ProfileViewSet(ModelViewSet):
                 follow_to = target_profile
             )
             return Response({"detail": "Follow success."}, status=status.HTTP_200_OK)
+    
+
+    @action(methods=['get'], detail=True)
+    def saved(self, request, pk=None):
+        """ Get user saved posts
+        """
+        from posts.serializers import GeneralPostSerializer
+        from articles.serializers import ArticleSerializer
+
+        if request.user.is_anonymous or request.user.profile.pk != int(pk):
+            return Response({ "detail": "Authentication credentials were not provided."}, status=status.HTTP_401_UNAUTHORIZED)
+
+        artworkSerializer = GeneralPostSerializer
+        questionSerializer = GeneralPostSerializer 
+
+        artworkSerializer.Meta.model = Artwork
+        questionSerializer.Meta.model = Question
+
+        article_post = request.user.article_save.all()
+        artwork_post = request.user.artwork_save.all()
+        question_post = request.user.question_save.all()
+
+        data = {
+            'articles' :  ArticleSerializer(article_post, many=True, context={'request': request}).data,
+            'artworks' :  GeneralPostSerializer(artwork_post, many=True, context={'request': request}).data,
+            'questions': GeneralPostSerializer(question_post, many=True, context={'request': request}).data
+        }
+        return Response(data, status=status.HTTP_200_OK)
 
 
 

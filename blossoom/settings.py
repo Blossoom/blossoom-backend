@@ -16,7 +16,6 @@ from pathlib import Path
 
 import dj_database_url
 import django_heroku
-from django.core.management.utils import get_random_secret_key
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY')
+SECRET_KEY = os.environ.get('SECRET_KEY') if os.environ.get('SECRET_KEY') else "44bt4nlv!9)%=^_54-#4$2!^$#4+__!_6-mj$ovt+5^4vapz#s$#i7dq0f!nou2fl&#29f&32#8g@m0q5=xt_bh_c9m!xnqy84"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -42,7 +41,10 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'cloudinary_storage',
     'django.contrib.staticfiles',
+    'cloudinary',
+    'whitenoise.runserver_nostatic',
     'drf_yasg',
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
@@ -61,6 +63,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -95,11 +98,24 @@ WSGI_APPLICATION = 'blossoom.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-DATABASES = {
-    'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL')
-    )
-}
+
+if os.environ.get('DATABSE_URL'):
+
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=os.environ.get('DATABASE_URL')
+        )
+    }
+
+else: 
+
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+
 
 
 # Password validation
@@ -137,6 +153,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Media files upload
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -156,7 +174,7 @@ REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
         'utils.permissions.IsOwnerOrReadOnly'
     ],
     
@@ -170,7 +188,7 @@ REST_FRAMEWORK = {
 # https://django-rest-framework-simplejwt.readthedocs.io/en/latest/settings.html
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=2),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': True,
@@ -202,6 +220,25 @@ SIMPLE_JWT = {
 }
 
 CORS_ORIGIN_ALLOW_ALL = True
+
+# Production image upload config
+# https://cloudinary.com/documentation
+
+CLOUD_NAME = os.environ.get('CLOUD_NAME')
+API_KEY =  os.environ.get('API_KEY')
+API_SECRET = os.environ.get('API_SECRET')
+
+
+if CLOUD_NAME and API_KEY and API_SECRET:
+
+    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+
+    CLOUDINARY_STORAGE = {
+        'CLOUD_NAME': CLOUD_NAME,
+        'API_KEY': API_KEY,
+        'API_SECRET': API_SECRET
+    }
 
 # Activate Django-Heroku.
 django_heroku.settings(locals())
