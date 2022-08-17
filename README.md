@@ -4,7 +4,7 @@ Blossom is a constructive and inclusive social media network that links artists 
 
 <a href="https://blossoom-api.herokuapp.com//">![Blossoom](https://img.shields.io/badge/Blossoom-API-9cf?style=for-the-badge)</a>
 
-
+<img src="https://github.com/Blossoom/blossoom-backend/blob/main/Blossoom(3).jpg" width="700">
 
 ## Install && Run
 
